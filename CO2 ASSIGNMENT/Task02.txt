@@ -1,0 +1,29 @@
+Task02
+#include <stdio.h>
+
+int calls = 0;
+int verify_card(int has_card)
+{
+    calls++;
+    return has_card;
+}
+
+int main(void)
+{
+    int senior = 1, eligible = 1, has_card = 0, concession;
+
+    calls = 0;
+    concession = (senior && eligible) || verify_card(has_card);
+    printf("Cheap condition first: result=%d calls=%d\n",
+           concession, calls);
+
+    calls = 0;
+    concession = verify_card(has_card) || (senior && eligible);
+    printf("Server check first: result=%d calls=%d\n",
+           concession, calls);
+
+    calls = 0;
+    concession = (senior & eligible) || verify_card(has_card);
+    printf("Bitwise &: result=%d calls=%d\n", concession, calls);
+    return 0;
+}

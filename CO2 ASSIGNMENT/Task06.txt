@@ -1,0 +1,42 @@
+Task06
+#include <stdio.h>
+#include <math.h>
+
+int main(void)
+{
+    double balance = 10000.00;
+    double rate = 0.02;
+    double repayment = 2000.00;
+    double total_interest = 0.0;
+    int month = 0, limit = 360;
+
+    printf("Month  Opening    Interest  Payment   Closing\n");
+
+    while (balance > 0.005 && month < limit) {
+        double opening = balance;
+        double interest = round(opening * rate * 100.0) / 100.0;
+        double due = opening + interest;
+        double payment;
+
+        if (repayment <= interest && due > repayment) {
+            printf("Repayment is not enough to reduce the loan.\n");
+            return 1;
+        }
+
+        payment = (repayment < due) ? repayment : due;
+        balance = round((due - payment) * 100.0) / 100.0;
+        total_interest += interest;
+        month++;
+
+        printf("%5d  %8.2f  %8.2f  %7.2f  %8.2f\n",
+               month, opening, interest, payment, balance);
+    }
+
+    if (balance <= 0.005)
+        printf("Repaid in %d months; total interest = Rs %.2f\n",
+               month, total_interest);
+    else
+        printf("360-month safety limit reached; balance = Rs %.2f\n",
+               balance);
+    return 0;
+}

@@ -1,0 +1,51 @@
+Task03
+#include <stdio.h>
+
+enum { LIGHT = 0, FAN = 1, AC = 2, HEATER = 3, PUMP = 4 };
+
+unsigned char switch_on(unsigned char reg, int dev)
+{
+    return (unsigned char)(reg | (1U << dev));
+}
+unsigned char switch_off(unsigned char reg, int dev)
+{
+    return (unsigned char)(reg & ~(1U << dev));
+}
+unsigned char toggle(unsigned char reg, int dev)
+{
+    return (unsigned char)(reg ^ (1U << dev));
+}
+int is_on(unsigned char reg, int dev)
+{
+    return (reg & (1U << dev)) != 0;
+}
+void print_binary(unsigned char reg)
+{
+    for (int i = 7; i >= 0; --i)
+        printf("%d", (reg >> i) & 1U);
+    printf("\n");
+}
+int count_on(unsigned char reg)
+{
+    int count = 0;
+    for (int i = 0; i < 8; ++i)
+        if (reg & (1U << i)) count++;
+    return count;
+}
+int main(void)
+{
+    unsigned char reg = 0;
+    reg = switch_on(reg, LIGHT);
+    reg = switch_on(reg, AC);
+    print_binary(reg);          /* 00000101 */
+
+    reg = toggle(reg, FAN);
+    reg = switch_off(reg, LIGHT);
+    print_binary(reg);          /* 00000110 */
+
+    printf("AC is %s, PUMP is %s\n",
+           is_on(reg, AC) ? "ON" : "OFF",
+           is_on(reg, PUMP) ? "ON" : "OFF");
+    printf("Devices ON: %d\n", count_on(reg));
+    return 0;
+}
